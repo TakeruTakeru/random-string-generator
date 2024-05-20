@@ -1,3 +1,5 @@
+import { loadUserCustomization } from "./app/user/custom";
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "addRandomString",
@@ -6,21 +8,22 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener(addContextMenuListener);
+
+async function addContextMenuListener(info, tab) {
   if (info.menuItemId === "addRandomString") {
-    chrome.storage.sync.get(["stringLength", "customCharacters"], (result) => {
-      const length = result.stringLength || 12; // デフォルトの長さは12
-      const characters =
-        result.customCharacters ||
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: addRandomStringToInput,
-        args: [length, characters],
-      });
+    const userCustomization = await loadUserCustomization();
+    const length = userCustomization.stringLength || 12; // デフォルトの長さは12
+    const characters =
+      userCustomization.customCharacters ||
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: addRandomStringToInput,
+      args: [length, characters],
     });
   }
-});
+}
 
 function addRandomStringToInput(length, characters) {
   let randomString = "";

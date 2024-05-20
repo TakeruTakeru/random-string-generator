@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { onDomContentLoaded } from "./core/event";
+
+// TODO: refactor_ChromeStorageを使う
+onDomContentLoaded(() => {
   const lengthInput = document.getElementById("stringLength");
   const charactersInput = document.getElementById("customCharacters");
   const saveButton = document.getElementById("save");
