@@ -9,11 +9,12 @@
 
 /**
  * Read values from storage.
- * @param {string} keys
+ * @param {string} key
  * @return {Promise<ApplicationData>} callback
  */
-function get(keys) {
-  return chrome.storage.sync.get(keys);
+async function get(key) {
+  const result = await chrome.storage.sync.get([key]);
+  return result[key];
 }
 
 /**

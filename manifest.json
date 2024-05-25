@@ -13,7 +13,7 @@
         "service_worker": "background.js"
     },
     "action": {
-        "default_popup": "popup.html",
+        "default_popup": "options.html",
         "default_icon": {
             "16": "icons/coach_16x16.jpg",
             "48": "icons/coach_48x48.jpg",

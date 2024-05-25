@@ -1,13 +1,17 @@
-//@ts-ignore
-
-import { feedbackCustom, loadUserCustomization } from "./app/user/custom";
+import {
+  getCustomCharactersInputElement,
+  getFeedbackElement,
+  getFormElement,
+  getStringLengthInputElement,
+} from "./app/selector";
+import { loadUserCustomization } from "./app/data";
 import { onDomContentLoaded } from "./core/event";
 import { ChromeStorage } from "./core/storage";
+import "./styles.css";
 
 onDomContentLoaded(async () => {
-  const lengthInput = document.getElementById("stringLength");
-  const charactersInput = document.getElementById("customCharacters");
-  const saveButton = document.getElementById("save");
+  const lengthInput = getStringLengthInputElement();
+  const charactersInput = getCustomCharactersInputElement();
 
   const userCustomization = await loadUserCustomization();
 
@@ -18,14 +22,19 @@ onDomContentLoaded(async () => {
     charactersInput.value = userCustomization.customCharacters;
   }
 
-  // 保存ボタンのクリックイベント
-  saveButton.addEventListener("click", () => {
+  const form = getFormElement();
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
     const stringLength = parseInt(lengthInput.value, 10);
     const customCharacters = charactersInput.value;
     const userCustomization = { stringLength, customCharacters };
 
     ChromeStorage.set({ userCustomization }, () => {
-      alert("Options saved!\n" + feedbackCustom(userCustomization));
+      const feedback = getFeedbackElement();
+      feedback.classList.add("visible");
+      setTimeout(() => {
+        feedback.classList.remove("visible");
+      }, 2000);
     });
   });
 });
